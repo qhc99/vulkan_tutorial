@@ -5,15 +5,16 @@
 
 ## 进度
 ### 阅读进度（浏览器）
-- 已读：Introduction、Overview、Development Environment、Base Code、Instance、Validation Layers
-- 下一章：Drawing a triangle → Setup → Physical devices and queue families
-  https://docs.vulkan.org/tutorial/latest/03_Drawing_a_triangle/00_Setup/03_Physical_devices_and_queue_families.html
+- 已读：Introduction、Overview、Development Environment、Base Code、Instance、Validation Layers、Physical devices and queue families
+- 下一章：Drawing a triangle → Setup → Logical device and queues
+  https://docs.vulkan.org/tutorial/latest/03_Drawing_a_triangle/00_Setup/04_Logical_device_and_queues.html
 
 ### 实现进度（本地 `triangle\main.cpp`）
 - 已实现并验证：Base Code（GLFW 窗口 + 主循环）、Instance（`vk::raii::Instance`，API 1.4，GLFW 扩展检查）、
-  Validation Layers（`VK_LAYER_KHRONOS_validation` + `VK_EXT_debug_utils` messenger，仅 Debug 启用）
-- 下一章：Drawing a triangle → Setup → Physical devices and queue families
-  https://docs.vulkan.org/tutorial/latest/03_Drawing_a_triangle/00_Setup/03_Physical_devices_and_queue_families.html
+  Validation Layers（`VK_LAYER_KHRONOS_validation` + `VK_EXT_debug_utils` messenger，仅 Debug 启用）、
+  Physical devices（`isDeviceSuitable`：1.3 + graphics 队列 + swapchain 扩展 + shaderDrawParameters/dynamicRendering/extendedDynamicState；选中 RTX 4070，系统另有 Intel UHD）
+- 下一章：Drawing a triangle → Setup → Logical device and queues
+  https://docs.vulkan.org/tutorial/latest/03_Drawing_a_triangle/00_Setup/04_Logical_device_and_queues.html
 - 验证 debug 回调是否通：临时调用 `instance.submitDebugUtilsMessageEXT(...)` 手动发一条消息，看 stderr；测完删掉。
 - 运行验证方法：`Start-Process -PassThru` 启动、`$null = $p.Handle`（PS 5.1 否则拿不到 ExitCode）、等 3 秒、`CloseMainWindow()`，退出码应为 0。
 - 本地说"下一章"指实现进度的下一章：读该章正文（`powershell -NoProfile -ExecutionPolicy Bypass -File .\tools\tut.ps1 <章节路径>`），
@@ -33,7 +34,8 @@
   - 我在本地会话里构建用完整路径：`& "C:\Program Files\Microsoft Visual Studio\18\Community\MSBuild\Current\Bin\amd64\MSBuild.exe" ...`
   - 输出：`out\<project>\<Config>\`，运行时工作目录必须是输出目录（教程用相对路径读 shaders/models/textures）。
   - 用户系统 ExecutionPolicy 是默认 Restricted，不能直接跑 .ps1；我自己调用脚本要用 `powershell -NoProfile -ExecutionPolicy Bypass -File ...`。
-  - 系统开着 Smart App Control，未签名的新 exe 可能被拦（"An Application Control policy has blocked this file"）。
+  - 系统开着 Smart App Control，未签名的新 exe 可能被拦（"An Application Control policy has blocked this file"），Debug 也会，且随机（同一份代码重编译也可能一直被拦）。
+    被拦 ≠ 代码有问题；被拦时无法运行验证，不提交，告诉用户。
 - 公共设置在 `build\Common.props`，与官方 `attachments/CMakeLists.txt` 对齐：C++20，`VULKAN_HPP_NO_STRUCT_CONSTRUCTORS=1`、`VULKAN_HPP_DISPATCH_LOADER_DYNAMIC=1`、`VULKAN_HPP_HANDLE_ERROR_OUT_OF_DATE_AS_SUCCESS`，链接 `vulkan-1.lib`。
 - 依赖（vcpkg, x64-windows）：glfw3、glm、stb、tinyobjloader、tinygltf、ktx。
 - 编辑器用 clangd，配置在 `.clangd`（与 `Common.props` 保持同步；改 define/依赖时两处都要改）。
