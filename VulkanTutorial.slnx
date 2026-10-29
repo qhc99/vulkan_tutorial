@@ -1,0 +1,7 @@
+<Solution>
+  <Configurations>
+    <Platform Name="x64" />
+  </Configurations>
+  <Project Path="triangle/triangle.vcxproj" />
+  <Project Path="reference/reference.vcxproj" />
+</Solution>

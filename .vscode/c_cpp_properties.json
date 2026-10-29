@@ -1,0 +1,25 @@
+{
+  "configurations": [
+    {
+      "name": "Win64 MSVC",
+      "includePath": [
+        "${workspaceFolder}/**",
+        "${workspaceFolder}/vcpkg_installed/x64-windows/include",
+        "${env:VULKAN_SDK}/Include"
+      ],
+      "defines": [
+        "VULKAN_HPP_NO_STRUCT_CONSTRUCTORS=1",
+        "VULKAN_HPP_DISPATCH_LOADER_DYNAMIC=1",
+        "VULKAN_HPP_HANDLE_ERROR_OUT_OF_DATE_AS_SUCCESS",
+        "NOMINMAX",
+        "WIN32_LEAN_AND_MEAN",
+        "_DEBUG",
+        "UNICODE",
+        "_UNICODE"
+      ],
+      "cppStandard": "c++20",
+      "intelliSenseMode": "windows-msvc-x64"
+    }
+  ],
+  "version": 4
+}

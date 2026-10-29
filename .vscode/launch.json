@@ -1,0 +1,23 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "triangle (Debug)",
+      "type": "cppvsdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/out/triangle/Debug/triangle.exe",
+      "cwd": "${workspaceFolder}/out/triangle/Debug",
+      "console": "integratedTerminal",
+      "preLaunchTask": "build triangle (Debug)"
+    },
+    {
+      "name": "reference (Debug)",
+      "type": "cppvsdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/out/reference/Debug/reference.exe",
+      "cwd": "${workspaceFolder}/out/reference/Debug",
+      "console": "integratedTerminal",
+      "preLaunchTask": "build reference (Debug)"
+    }
+  ]
+}
