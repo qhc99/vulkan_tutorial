@@ -20,26 +20,36 @@
 - 程序员，C++（RAII、C++20）、实时 3D 图形基础都已具备，不需要讲前置知识。
 
 ## 进度
-- 已完成：Introduction、Overview、Development Environment
-- 下一章：Drawing a triangle → Setup → Base Code
-  https://docs.vulkan.org/tutorial/latest/03_Drawing_a_triangle/00_Setup/00_Base_code.html
+- 已完成：Introduction、Overview、Development Environment、Base Code（`triangle\main.cpp` 已按本章写好并验证：GLFW 窗口 + 主循环）
+- 下一章：Drawing a triangle → Setup → Instance
+  https://docs.vulkan.org/tutorial/latest/03_Drawing_a_triangle/00_Setup/01_Instance.html
 
 ## 主线之后还要学的进阶篇（按此顺序）
 1. Synchronization：https://docs.vulkan.org/tutorial/latest/Synchronization/introduction.html
 2. Advanced Vulkan Compute：https://docs.vulkan.org/tutorial/latest/Advanced_Vulkan_Compute/introduction.html
 3. Advanced glTF：https://docs.vulkan.org/tutorial/latest/Advanced_glTF/introduction.html
 
+## Git 规则
+- 每次测试成功（MSBuild 构建通过 + 程序运行验证符合本章预期）后，自动 `git add -A` 并 commit，无需再问。
+- 提交信息格式：`<章节名>: <做了什么>`，例如 `Instance: create vk::raii::Instance with GLFW extensions`。
+- 构建或运行失败时不提交；只 commit，不 push。
+
 ## 本地构建环境
 - 工具链：VS 2026 Community（MSBuild 18，toolset v145，MSVC 14.51），Vulkan SDK 1.4.363（`$env:VULKAN_SDK`），vcpkg 在 `C:\Users\quinn\workspace\vcpkg`（manifest 模式，`vcpkg.json`）。
-- 用 MSBuild 而不是 CMake；不需要 Developer Prompt，MSBuild 自己配好 cl/link。
-  - 构建：`.\tools\build.ps1 [-Config Debug|Release] [-Run] [-Rebuild] [-Project triangle]`
-  - 输出：`out\<project>\<Config>\`，运行时工作目录就是输出目录（教程用相对路径读 shaders/models/textures）。
-  - 临时要直接用 cl：`& "C:\Program Files\Microsoft Visual Studio\18\Community\Common7\Tools\Launch-VsDevShell.ps1" -Arch amd64 -SkipAutomaticLocation`
+- 用 MSBuild（vcxproj + `VulkanTutorial.slnx`），不用 CMake，也不用自定义构建脚本。
+  - VS 2026 打开 `VulkanTutorial.slnx` → F5；或 VS Code `Ctrl+Shift+B` / F5（`.vscode/tasks.json` 直接调 MSBuild.exe）。
+  - 命令行：VS Code 终端默认是 "Developer PowerShell for VS 2026"（`.vscode/settings.json`），`msbuild`、`cl` 都在 PATH：
+    `msbuild triangle\triangle.vcxproj [-p:Configuration=Release]`（默认 Debug|x64）
+  - 输出：`out\<project>\<Config>\`，运行时工作目录必须是输出目录（教程用相对路径读 shaders/models/textures）。
+  - 用户系统 ExecutionPolicy 是默认 Restricted，不能直接跑 .ps1；我自己调用脚本要用 `powershell -NoProfile -ExecutionPolicy Bypass -File ...`。
+  - 系统开着 Smart App Control，未签名的新 exe 可能被拦（"An Application Control policy has blocked this file"）。
 - 公共设置在 `build\Common.props`，与官方 `attachments/CMakeLists.txt` 对齐：C++20，`VULKAN_HPP_NO_STRUCT_CONSTRUCTORS=1`、`VULKAN_HPP_DISPATCH_LOADER_DYNAMIC=1`、`VULKAN_HPP_HANDLE_ERROR_OUT_OF_DATE_AS_SUCCESS`，链接 `vulkan-1.lib`。
 - 依赖（vcpkg, x64-windows）：glfw3、glm、stb、tinyobjloader、tinygltf、ktx。
 - 两个项目：
-  - `triangle\main.cpp`：我自己跟着教程写的代码（目前是环境冒烟测试，开始 Base Code 时替换）。
-  - `reference\main.cpp`：官方每章附带的完整代码，用 `.\tools\ref.ps1 <章节URL|路径|xx.cpp>` 下载（会覆盖），然后 `.\tools\build.ps1 -Project reference -Run`。用于对照/排错。
+  - `triangle\main.cpp`：跟着教程逐章累积的代码。
+  - 编辑器用 clangd，配置在 `.clangd`（与 `Common.props` 保持同步；改 define/依赖时两处都要改）。
+  - `reference\main.cpp`：官方每章附带的完整代码，用于对照/排错。下载：章节页末尾的 C++ code 链接，
+    `curl.exe -L https://docs.vulkan.org/tutorial/latest/_attachments/<xx>.cpp -o reference\main.cpp`
 - TODO（到 Shader modules 章节时）：在 `Common.props` 加 slangc 编译步骤，对齐官方命令
   `slangc shader.slang -target spirv -profile spirv_1_4 -emit-spirv-directly -fvk-use-entrypoint-name -entry vertMain -entry fragMain -o slang.spv`，输出到 `$(OutDir)shaders\`。
 - 新的大章节（如 compute、glTF）需要独立程序时，复制 `triangle\` 为新项目并加进 `VulkanTutorial.slnx`。

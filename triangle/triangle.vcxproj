@@ -12,6 +12,7 @@
   </ItemGroup>
 
   <PropertyGroup Label="Globals">
+    <Platform Condition="'$(Platform)' == ''">x64</Platform>
     <VCProjectVersion>18.0</VCProjectVersion>
     <ProjectGuid>{6B1E2E4A-3C1F-4C55-9E2B-7A1D2B0C8F01}</ProjectGuid>
     <RootNamespace>triangle</RootNamespace>

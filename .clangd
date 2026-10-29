@@ -1,0 +1,11 @@
+# Mirrors build/Common.props for clangd (MSBuild doesn't emit compile_commands.json).
+CompileFlags:
+  Add:
+    - -std=c++20
+    - -IC:/VulkanSDK/1.4.363.0/Include
+    - -IC:/Users/quinn/workspace/vulkan_tutorial/vcpkg_installed/x64-windows/include
+    - -DVULKAN_HPP_NO_STRUCT_CONSTRUCTORS=1
+    - -DVULKAN_HPP_DISPATCH_LOADER_DYNAMIC=1
+    - -DVULKAN_HPP_HANDLE_ERROR_OUT_OF_DATE_AS_SUCCESS
+    - -DNOMINMAX
+    - -DWIN32_LEAN_AND_MEAN

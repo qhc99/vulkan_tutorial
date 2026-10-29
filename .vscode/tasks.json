@@ -3,15 +3,17 @@
   "tasks": [
     {
       "label": "build triangle (Debug)",
-      "type": "shell",
-      "command": "powershell -NoProfile -ExecutionPolicy Bypass -File ${workspaceFolder}/tools/build.ps1 -Project triangle",
+      "type": "process",
+      "command": "C:/Program Files/Microsoft Visual Studio/18/Community/MSBuild/Current/Bin/amd64/MSBuild.exe",
+      "args": ["triangle/triangle.vcxproj", "-nologo", "-m", "-v:minimal", "-p:Configuration=Debug"],
       "group": { "kind": "build", "isDefault": true },
       "problemMatcher": "$msCompile"
     },
     {
       "label": "build reference (Debug)",
-      "type": "shell",
-      "command": "powershell -NoProfile -ExecutionPolicy Bypass -File ${workspaceFolder}/tools/build.ps1 -Project reference",
+      "type": "process",
+      "command": "C:/Program Files/Microsoft Visual Studio/18/Community/MSBuild/Current/Bin/amd64/MSBuild.exe",
+      "args": ["reference/reference.vcxproj", "-nologo", "-m", "-v:minimal", "-p:Configuration=Debug"],
       "group": "build",
       "problemMatcher": "$msCompile"
     }

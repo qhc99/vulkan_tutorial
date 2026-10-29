@@ -1,31 +1,74 @@
-// Environment smoke test: Vulkan-Hpp RAII + GLFW + GLM all compile, link and run.
-// Replace with the tutorial's Base Code when starting that chapter.
+#if defined(__INTELLISENSE__) || !defined(USE_CPP20_MODULES)
 #include <vulkan/vulkan_raii.hpp>
+#else
+import vulkan_hpp;
+#endif
 #define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
-#include <glm/glm.hpp>
 
 #include <cstdlib>
 #include <iostream>
+#include <stdexcept>
+
+constexpr uint32_t WIDTH  = 800;
+constexpr uint32_t HEIGHT = 600;
+
+class HelloTriangleApplication
+{
+  public:
+    void run()
+    {
+        initWindow();
+        initVulkan();
+        mainLoop();
+        cleanup();
+    }
+
+  private:
+    GLFWwindow *window = nullptr;
+
+    void initWindow()
+    {
+        glfwInit();
+
+        glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
+        glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
+
+        window = glfwCreateWindow(WIDTH, HEIGHT, "Vulkan", nullptr, nullptr);
+    }
+
+    void initVulkan()
+    {
+    }
+
+    void mainLoop()
+    {
+        while (!glfwWindowShouldClose(window))
+        {
+            glfwPollEvents();
+        }
+    }
+
+    void cleanup()
+    {
+        glfwDestroyWindow(window);
+
+        glfwTerminate();
+    }
+};
 
 int main()
 {
-    vk::raii::Context context;
-    uint32_t v = context.enumerateInstanceVersion();
-    std::cout << "Vulkan instance version: " << VK_API_VERSION_MAJOR(v) << '.' << VK_API_VERSION_MINOR(v) << '.'
-              << VK_API_VERSION_PATCH(v) << '\n';
-    std::cout << "Header version: " << VK_HEADER_VERSION << '\n';
-
-    for (auto const& layer : context.enumerateInstanceLayerProperties())
-        std::cout << "  layer: " << layer.layerName << '\n';
-
-    if (!glfwInit())
+    try
+    {
+        HelloTriangleApplication app;
+        app.run();
+    }
+    catch (const std::exception &e)
+    {
+        std::cerr << e.what() << std::endl;
         return EXIT_FAILURE;
-    std::cout << "GLFW " << glfwGetVersionString() << ", Vulkan supported: " << (glfwVulkanSupported() ? "yes" : "no")
-              << '\n';
-    glfwTerminate();
+    }
 
-    glm::vec3 a{1, 2, 3};
-    std::cout << "glm dot: " << glm::dot(a, a) << '\n';
     return EXIT_SUCCESS;
 }
