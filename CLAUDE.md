@@ -5,17 +5,19 @@
 
 ## 进度
 ### 阅读进度（浏览器）
-- 已读：Introduction、Overview、Development Environment、Base Code、Instance、Validation Layers、Physical devices and queue families
-- 下一章：Drawing a triangle → Setup → Logical device and queues
-  https://docs.vulkan.org/tutorial/latest/03_Drawing_a_triangle/00_Setup/04_Logical_device_and_queues.html
+- 已读：Introduction、Overview、Development Environment、Base Code、Instance、Validation Layers、Physical devices and queue families、Logical device and queues
+- 下一章：Drawing a triangle → Presentation → Window surface
+  https://docs.vulkan.org/tutorial/latest/03_Drawing_a_triangle/01_Presentation/00_Window_surface.html
 
 ### 实现进度（本地 `triangle\main.cpp`）
 - 已实现并验证：Base Code（GLFW 窗口 + 主循环）、Instance（`vk::raii::Instance`，API 1.4，GLFW 扩展检查）、
   Validation Layers（`VK_LAYER_KHRONOS_validation` + `VK_EXT_debug_utils` messenger，仅 Debug 启用）、
-  Physical devices（`isDeviceSuitable`：1.3 + graphics 队列 + swapchain 扩展 + shaderDrawParameters/dynamicRendering/extendedDynamicState；选中 RTX 4070，系统另有 Intel UHD）
-- 下一章：Drawing a triangle → Setup → Logical device and queues
-  https://docs.vulkan.org/tutorial/latest/03_Drawing_a_triangle/00_Setup/04_Logical_device_and_queues.html
+  Physical devices（`isDeviceSuitable`：1.3 + graphics 队列 + swapchain 扩展 + shaderDrawParameters/dynamicRendering/extendedDynamicState；选中 RTX 4070，系统另有 Intel UHD）、
+  Logical device and queues（`vk::raii::Device` + StructureChain 启用上述 3 个特性 + `graphicsQueue`）
+- 下一章：Drawing a triangle → Presentation → Window surface
+  https://docs.vulkan.org/tutorial/latest/03_Drawing_a_triangle/01_Presentation/00_Window_surface.html
 - 验证 debug 回调是否通：临时调用 `instance.submitDebugUtilsMessageEXT(...)` 手动发一条消息，看 stderr；测完删掉。
+- 运行验证前先确认 MSBuild 退出码为 0（否则会跑到旧 exe）；Debug、Release 都构建并运行。
 - 运行验证方法：`Start-Process -PassThru` 启动、`$null = $p.Handle`（PS 5.1 否则拿不到 ExitCode）、等 3 秒、`CloseMainWindow()`，退出码应为 0。
 - 本地说"下一章"指实现进度的下一章：读该章正文（`powershell -NoProfile -ExecutionPolicy Bypass -File .\tools\tut.ps1 <章节路径>`），
   把代码加进 `triangle\main.cpp`，构建运行验证，按 Git 规则提交，然后更新这里。实现不能超过阅读进度。
@@ -34,7 +36,7 @@
   - 我在本地会话里构建用完整路径：`& "C:\Program Files\Microsoft Visual Studio\18\Community\MSBuild\Current\Bin\amd64\MSBuild.exe" ...`
   - 输出：`out\<project>\<Config>\`，运行时工作目录必须是输出目录（教程用相对路径读 shaders/models/textures）。
   - 用户系统 ExecutionPolicy 是默认 Restricted，不能直接跑 .ps1；我自己调用脚本要用 `powershell -NoProfile -ExecutionPolicy Bypass -File ...`。
-  - 系统开着 Smart App Control，未签名的新 exe 可能被拦（"An Application Control policy has blocked this file"），Debug 也会，且随机（同一份代码重编译也可能一直被拦）。
+  - Smart App Control 已于 2026-10-29 关闭（`VerifiedAndReputablePolicyState = 0`）。以下为历史记录：未签名的新 exe 曾被拦（"An Application Control policy has blocked this file"），Debug 也会。原理：未签名 exe 按 SHA256 查云端信誉，结论按哈希缓存；MSVC 每次编译哈希都变，所以看起来随机。与启动方式无关（VS 调试器、资源管理器双击同样被拦）。日志：`Microsoft-Windows-CodeIntegrity/Operational` 事件 3077。
     被拦 ≠ 代码有问题；被拦时无法运行验证，不提交，告诉用户。
 - 公共设置在 `build\Common.props`，与官方 `attachments/CMakeLists.txt` 对齐：C++20，`VULKAN_HPP_NO_STRUCT_CONSTRUCTORS=1`、`VULKAN_HPP_DISPATCH_LOADER_DYNAMIC=1`、`VULKAN_HPP_HANDLE_ERROR_OUT_OF_DATE_AS_SUCCESS`，链接 `vulkan-1.lib`。
 - 依赖（vcpkg, x64-windows）：glfw3、glm、stb、tinyobjloader、tinygltf、ktx。
