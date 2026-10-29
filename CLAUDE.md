@@ -5,14 +5,16 @@
 
 ## 进度
 ### 阅读进度（浏览器）
-- 已读：Introduction、Overview、Development Environment、Base Code、Instance
-- 下一章：Drawing a triangle → Setup → Validation Layers
-  https://docs.vulkan.org/tutorial/latest/03_Drawing_a_triangle/00_Setup/02_Validation_layers.html
+- 已读：Introduction、Overview、Development Environment、Base Code、Instance、Validation Layers
+- 下一章：Drawing a triangle → Setup → Physical devices and queue families
+  https://docs.vulkan.org/tutorial/latest/03_Drawing_a_triangle/00_Setup/03_Physical_devices_and_queue_families.html
 
 ### 实现进度（本地 `triangle\main.cpp`）
-- 已实现并验证：Base Code（GLFW 窗口 + 主循环）、Instance（`vk::raii::Instance`，API 1.4，GLFW 扩展检查 + 打印可用扩展）
-- 下一章：Drawing a triangle → Setup → Validation Layers
-  https://docs.vulkan.org/tutorial/latest/03_Drawing_a_triangle/00_Setup/02_Validation_layers.html
+- 已实现并验证：Base Code（GLFW 窗口 + 主循环）、Instance（`vk::raii::Instance`，API 1.4，GLFW 扩展检查）、
+  Validation Layers（`VK_LAYER_KHRONOS_validation` + `VK_EXT_debug_utils` messenger，仅 Debug 启用）
+- 下一章：Drawing a triangle → Setup → Physical devices and queue families
+  https://docs.vulkan.org/tutorial/latest/03_Drawing_a_triangle/00_Setup/03_Physical_devices_and_queue_families.html
+- 验证 debug 回调是否通：临时调用 `instance.submitDebugUtilsMessageEXT(...)` 手动发一条消息，看 stderr；测完删掉。
 - 运行验证方法：`Start-Process -PassThru` 启动、`$null = $p.Handle`（PS 5.1 否则拿不到 ExitCode）、等 3 秒、`CloseMainWindow()`，退出码应为 0。
 - 本地说"下一章"指实现进度的下一章：读该章正文（`powershell -NoProfile -ExecutionPolicy Bypass -File .\tools\tut.ps1 <章节路径>`），
   把代码加进 `triangle\main.cpp`，构建运行验证，按 Git 规则提交，然后更新这里。实现不能超过阅读进度。
