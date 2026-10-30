@@ -5,17 +5,18 @@
 
 ## 进度
 ### 阅读进度（浏览器）
-- 已读：Introduction、Overview、Development Environment、Base Code、Instance、Validation Layers、Physical devices and queue families、Logical device and queues
-- 下一章：Drawing a triangle → Presentation → Window surface
-  https://docs.vulkan.org/tutorial/latest/03_Drawing_a_triangle/01_Presentation/00_Window_surface.html
+- 已读：Introduction、Overview、Development Environment、Base Code、Instance、Validation Layers、Physical devices and queue families、Logical device and queues、Window surface
+- 下一章：Drawing a triangle → Presentation → Swap chain
+  https://docs.vulkan.org/tutorial/latest/03_Drawing_a_triangle/01_Presentation/01_Swap_chain.html
 
 ### 实现进度（本地 `triangle\main.cpp`）
 - 已实现并验证：Base Code（GLFW 窗口 + 主循环）、Instance（`vk::raii::Instance`，API 1.4，GLFW 扩展检查）、
   Validation Layers（`VK_LAYER_KHRONOS_validation` + `VK_EXT_debug_utils` messenger，仅 Debug 启用）、
   Physical devices（`isDeviceSuitable`：1.3 + graphics 队列 + swapchain 扩展 + shaderDrawParameters/dynamicRendering/extendedDynamicState；选中 RTX 4070，系统另有 Intel UHD）、
-  Logical device and queues（`vk::raii::Device` + StructureChain 启用上述 3 个特性 + `graphicsQueue`）
-- 下一章：Drawing a triangle → Presentation → Window surface
-  https://docs.vulkan.org/tutorial/latest/03_Drawing_a_triangle/01_Presentation/00_Window_surface.html
+  Logical device and queues（`vk::raii::Device` + StructureChain 启用上述 3 个特性），
+  Window surface（`glfwCreateWindowSurface` → `vk::raii::SurfaceKHR`；`isDeviceSuitable` 与 `createLogicalDevice` 都改为找 graphics+present 同一队列族；成员 `graphicsQueue` 改名 `queue`）
+- 下一章：Drawing a triangle → Presentation → Swap chain
+  https://docs.vulkan.org/tutorial/latest/03_Drawing_a_triangle/01_Presentation/01_Swap_chain.html
 - 验证 debug 回调是否通：临时调用 `instance.submitDebugUtilsMessageEXT(...)` 手动发一条消息，看 stderr；测完删掉。
 - 运行验证前先确认 MSBuild 退出码为 0（否则会跑到旧 exe）；Debug、Release 都构建并运行。
 - 运行验证方法：`Start-Process -PassThru` 启动、`$null = $p.Handle`（PS 5.1 否则拿不到 ExitCode）、等 3 秒、`CloseMainWindow()`，退出码应为 0。
